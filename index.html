@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.6.7/ethers.umd.min.js" integrity="sha512-r3aLEvPbgV/a+RCKU2NXxCUJns7dcdz6nIij6/AWerajkAAwHkTkGXeYsmovGpbfBSXmmK47jh0T9gokKuljjw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="./getProvider.js"></script>
+    <script src="./sendEth.js"></script>
+  </head>
+  <body>
+    <script>
+      var config = {
+        type: Phaser.AUTO,
+        width: 800,
+        height: 600,
+        physics: {
+          default: "arcade",
+          arcade: {
+            gravity: { y: 200 },
+          },
+        },
+        scene: {
+          preload: preload,
+          create: create,
+        },
+      };
+
+      const game = new Phaser.Game(config);
+
+      function preload() {
+        this.load.setBaseURL("http://labs.phaser.io");
+        this.load.image("sky", "assets/skies/space3.png");
+      }
+
+      function create() {
+        this.add.image(400, 300, "sky");
+        
+        const connectButton = this.add.text(350, 250, "Connect", {
+          font: "24px Arial",
+          fill: "#ffffff",
+        });
+        connectButton.setInteractive();
+
+        connectButton.on("pointerup", async () => {
+          const provider = await getProvider();
+          displaySend(this, provider);
+        });
+      }
+
+      function displaySend(self, provider) {
+        const sendButton = self.add.text(350, 300, "Send", {
+          font: "24px Arial",
+          fill: "#ffffff",
+        });
+        sendButton.setInteractive();
+        sendButton.on("pointerup", async () => {
+          sendEth(provider);
+        });
+      }
+    </script>
+  </body>
+</html>
